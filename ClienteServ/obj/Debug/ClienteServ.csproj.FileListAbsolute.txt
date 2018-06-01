@@ -1,4 +1,3 @@
-C:\Users\maria\source\repos\ClienteServ\ClienteServ\obj\Debug\ClienteServ.csprojResolveAssemblyReference.cache
 C:\Users\maria\source\repos\ClienteServ\ClienteServ\obj\Debug\ClienteServ.csproj.CoreCompileInputs.cache
 C:\Users\maria\source\repos\ClienteServ\ClienteServ\bin\ApplicationInsights.config
 C:\Users\maria\source\repos\ClienteServ\ClienteServ\bin\ClienteServ.dll.config

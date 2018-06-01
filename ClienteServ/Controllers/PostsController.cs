@@ -13,22 +13,22 @@ namespace ClienteServ
 {
     public class PostsController : Controller
     {
-        private MyDbContext db = new MyDbContext();
+        private readonly UnitOfWork unit = new UnitOfWork();
 
         // GET: Posts
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            return View(await db.Post.ToListAsync());
+            return View(unit.PostsRepository.Queryable().ToList());
         }
 
         // GET: Posts/Details/5
-        public async Task<ActionResult> Details(string id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Post post = await db.Post.FindAsync(id);
+            Post post = await unit.PostsRepository.FindAsync(id);
             if (post == null)
             {
                 return HttpNotFound();
@@ -51,8 +51,8 @@ namespace ClienteServ
         {
             if (ModelState.IsValid)
             {
-                db.Post.Add(post);
-                await db.SaveChangesAsync();
+                unit.PostsRepository.Create(post);
+                await unit.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -66,7 +66,7 @@ namespace ClienteServ
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Post post = await db.Post.FindAsync(id);
+            Post post = await unit.PostsRepository.FindAsync(id);
             if (post == null)
             {
                 return HttpNotFound();
@@ -83,8 +83,8 @@ namespace ClienteServ
         {
             if (ModelState.IsValid)
             {
-                db.Entry(post).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                unit.PostsRepository.Update(post);
+                await unit.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(post);
@@ -97,7 +97,7 @@ namespace ClienteServ
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Post post = await db.Post.FindAsync(id);
+            Post post = await unit.PostsRepository.FindAsync(id);
             if (post == null)
             {
                 return HttpNotFound();
@@ -110,19 +110,10 @@ namespace ClienteServ
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            Post post = await db.Post.FindAsync(id);
-            db.Post.Remove(post);
-            await db.SaveChangesAsync();
+            Post post = await unit.PostsRepository.FindAsync(id);
+            unit.PostsRepository.Delete(post);
+            await unit.SaveChangesAsync();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

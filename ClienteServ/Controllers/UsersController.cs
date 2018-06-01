@@ -13,22 +13,22 @@ namespace ClienteServ
 {
     public class UsersController : Controller
     {
-        private MyDbContext db = new MyDbContext();
+        private readonly UnitOfWork unit = new UnitOfWork();
 
         // GET: Users
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            return View(await db.Users.ToListAsync());
+            return View(unit.UsersRepository.Queryable().ToList());
         }
 
         // GET: Users/Details/5
-        public async Task<ActionResult> Details(string id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Users users = await db.Users.FindAsync(id);
+            Users users = await unit.UsersRepository.FindAsync(id);
             if (users == null)
             {
                 return HttpNotFound();
@@ -51,8 +51,8 @@ namespace ClienteServ
         {
             if (ModelState.IsValid)
             {
-                db.Users.Add(users);
-                await db.SaveChangesAsync();
+                unit.UsersRepository.Create(users);
+                await unit.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -66,7 +66,7 @@ namespace ClienteServ
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Users users = await db.Users.FindAsync(id);
+            Users users = await unit.UsersRepository.FindAsync(id);
             if (users == null)
             {
                 return HttpNotFound();
@@ -83,8 +83,8 @@ namespace ClienteServ
         {
             if (ModelState.IsValid)
             {
-                db.Entry(users).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                unit.UsersRepository.Update(users);
+                await unit.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(users);
@@ -97,7 +97,7 @@ namespace ClienteServ
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Users users = await db.Users.FindAsync(id);
+            Users users = await unit.UsersRepository.FindAsync(id);
             if (users == null)
             {
                 return HttpNotFound();
@@ -110,19 +110,10 @@ namespace ClienteServ
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            Users users = await db.Users.FindAsync(id);
-            db.Users.Remove(users);
-            await db.SaveChangesAsync();
+            Users users = await unit.UsersRepository.FindAsync(id);
+            unit.UsersRepository.Delete(users);
+            await unit.SaveChangesAsync();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

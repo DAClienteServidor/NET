@@ -154,8 +154,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\UnitOfWork.cs" />
-    <Compile Include="MyDbContext.cs" />
+    <Compile Include="Repositories\UnitOfWork.cs" />
+    <Compile Include="Models\MyDbContext.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Controllers\PostsController.cs" />
