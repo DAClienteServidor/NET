@@ -60,7 +60,7 @@ namespace ClienteServ
         }
 
         // GET: Posts/Edit/5
-        public async Task<ActionResult> Edit(string id)
+        public async Task<ActionResult> Edit(int id)
         {
             if (id == null)
             {
@@ -91,7 +91,7 @@ namespace ClienteServ
         }
 
         // GET: Posts/Delete/5
-        public async Task<ActionResult> Delete(string id)
+        public async Task<ActionResult> Delete(int id)
         {
             if (id == null)
             {
@@ -108,7 +108,7 @@ namespace ClienteServ
         // POST: Posts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Post post = await unit.PostsRepository.FindAsync(id);
             unit.PostsRepository.Delete(post);
